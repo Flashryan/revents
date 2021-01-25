@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+
+.mastHead {
+  display: flex;
+  align-items: center;
+  background-color: #61dafb !important;
+
+  height: 100vh;
+}
+
+.mastHead h1.ui.header {
+  font-size: 4em;
+}

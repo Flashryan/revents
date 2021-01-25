@@ -1,9 +1,16 @@
 import {React, useState} from 'react';
 import{Segment, Header, Form, Button, BreadcrumbSection} from 'semantic-ui-react';
 import cuid from 'cuid';
+import {Link} from 'react-router-dom';
+import {useSelector, useDispatch} from 'react-redux';
+import {createEvent, updateEvent } from '../eventActions';
+ 
 
+export default function EventForm({match, history}){
 
-export default function EventForm({setFormOpen, setEvents, createEvent, selectedEvent}){
+    const dispatch = useDispatch();
+
+    const selectedEvent = useSelector(state => state.event.events.find(e => e.id === match.params.id))
 
    const initialValues = selectedEvent ?? {
        title: '',
@@ -13,14 +20,21 @@ export default function EventForm({setFormOpen, setEvents, createEvent, selected
        date: ''
    }
 
+
     const[values, setValues] = useState(initialValues);
     
     function handleFormSubmit(){
-        createEvent({...values,
-        id: cuid(),
-        hostedBy:'Bob',
-        attendees:[],
-        hostedPhotoURL: './ass'})
+
+        selectedEvent 
+        ? dispatch(updateEvent({...selectedEvent, ...values}))
+        : dispatch (createEvent({...values,
+            id: cuid(),
+            hostedBy:'Bob',
+            attendees:[],
+            hostedPhotoURL: './ass'
+        }));
+        
+        history.push('./events');  
     }
 
 
@@ -53,7 +67,7 @@ export default function EventForm({setFormOpen, setEvents, createEvent, selected
                     <input type="date" placeholder="Date" name='date' value={values.date} onChange = {(e) => handleInputChange(e)} />
                 </Form.Field>
                 <Button type='submit' floated='right' positive content='Submit' />
-                <Button onClick={() => setFormOpen(false)} type='submit' floated='right' content='Cancel' />
+                <Button type='submit' floated='right' content='Cancel' />
             </Form>
         </Segment>
 
